@@ -1,0 +1,37 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+    depends_on:
+      - node-service
+
+  node-service:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - 3000
+    depends_on:
+      - db
+    environment:
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+
+
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
